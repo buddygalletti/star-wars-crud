@@ -1,6 +1,9 @@
 <html>
   <head>
 <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
     #nav {
         display: flex;
         justify-content: space-around;
@@ -29,6 +32,9 @@
         float: right;
         margin-left: 5px;
     }
+    .navLink {
+        padding: 10px;
+    }
 </style>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js'></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -39,14 +45,15 @@
   <body>
     <div id='root'></div>
     <script type='text/babel'>
-        const { HashRouter, Route, Link } = ReactRouterDOM;
+        const { HashRouter, Route, NavLink } = ReactRouterDOM;
 
         const Nav = (props) => {
+            const activeStyle = { backgroundColor: 'dodgerblue', color: 'white', borderRadius: '20%', textDecoration: 'none' }
             return (
                 <div id='nav'>
-                    <Link to='/home'>Home</Link>
-                    <Link to='/people'>People({`${props.people.length}`})</Link>
-                    <Link to='/create'>Create A Person</Link>
+                    <NavLink className="navLink" activeStyle={ activeStyle } to='/home'>Home</NavLink>
+                    <NavLink className="navLink" activeStyle={ activeStyle } to='/people'>People({`${props.people.length}`})</NavLink>
+                    <NavLink className="navLink" activeStyle={ activeStyle } to='/create'>Create A Person</NavLink>
                 </div>
             )
         }
@@ -54,7 +61,7 @@
         const Home = () => {
             return (
                 <div id='welcome'>
-                    <h4>Welcome!!!</h4>
+                    <h2>Welcome!!!</h2>
                 </div>
             )
         }
@@ -163,11 +170,6 @@
 
             }
         }
-
-
-
-
-
         
         const root = document.querySelector('#root');
         ReactDOM.render(<App />, root);
