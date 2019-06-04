@@ -25,6 +25,10 @@
         align-items: center;
         flex-direction: column;
     }
+    #palpatine {
+        display: flex;
+        justify-content: center;
+    }
     li {
         padding: 5px;
     }
@@ -45,7 +49,7 @@
   <body>
     <div id='root'></div>
     <script type='text/babel'>
-        const { HashRouter, Route, NavLink } = ReactRouterDOM;
+        const { HashRouter, Route, NavLink, Link } = ReactRouterDOM;
 
         const Nav = (props) => {
             const activeStyle = { backgroundColor: 'dodgerblue', color: 'white', borderRadius: '20%', textDecoration: 'none' }
@@ -75,6 +79,14 @@
                             props.people.map((person, idx) => <li key={ idx }>{ person.name } <button type='button' className='remove' onClick={() => handleDelete(person.name) }>x</button></li>)
                         }
                     </ul>
+                </div>
+            )
+        }
+
+        const Palpatine = (props) => {
+            return (
+                <div id='palpatine'>
+                    <img src='https://sayingimages.com/wp-content/uploads/the-power-of-admin-emperor-palpatine-meme.jpg' />
                 </div>
             )
         }
@@ -125,7 +137,7 @@
                 this.handleDelete = this.handleDelete.bind(this)
                 this.addPerson = this.addPerson.bind(this)
             }
-            
+
             async componentDidMount () {
                 try {
                     const res = await fetch('https://profs-star-wars.herokuapp.com/people');
@@ -138,6 +150,9 @@
 
             handleDelete(clicked) {
                 const { people } = this.state
+                if(clicked === 'Palpatine'){
+                    location.hash = '#/palpatine'
+                }
                 const newPeople = people.filter(person => {
                     return person.name !== clicked
                 });
@@ -165,12 +180,13 @@
                         <Route path='/home' exact component={ Home } />
                         <Route path='/people' render={() => <People people={ people } handleDelete={ this.handleDelete } /> } />
                         <Route path='/create' exact render={({ history }) => <PersonForm addPerson={ this.addPerson } history={ history }/>} />
+                        <Route path='/palpatine' render={({ history }) => <Palpatine history={ history }/>}/>
                     </HashRouter>
                 )
 
             }
         }
-        
+
         const root = document.querySelector('#root');
         ReactDOM.render(<App />, root);
     </script>
