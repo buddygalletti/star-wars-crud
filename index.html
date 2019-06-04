@@ -27,7 +27,8 @@
     }
     #palpatine {
         display: flex;
-        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
     li {
         padding: 5px;
@@ -84,9 +85,14 @@
         }
 
         const Palpatine = (props) => {
+                const activeStyle = { backgroundColor: 'black', color: 'white' }
             return (
                 <div id='palpatine'>
                     <img src='https://sayingimages.com/wp-content/uploads/the-power-of-admin-emperor-palpatine-meme.jpg' />
+                    <br />
+                    <div className='choose'>
+                        <button type='button' onClick={() => { document.querySelector('body').style.background = 'black'; document.querySelector('body').style.color = 'white' }}>Join the Dark Side</button>
+                    </div>
                 </div>
             )
         }
