@@ -1,0 +1,176 @@
+<html>
+  <head>
+<style>
+    #nav {
+        display: flex;
+        justify-content: space-around;
+        padding: 1.5em;
+    }
+    #nav a {
+        color: dodgerblue;
+    }
+    #welcome {
+        display: flex;
+        justify-content: center;
+    }
+    #people {
+        display: flex;
+        justify-content: center;
+    }
+    #create {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    li {
+        padding: 5px;
+    }
+    li button {
+        float: right;
+        margin-left: 5px;
+    }
+</style>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js'></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react-router-dom/5.0.0/react-router-dom.js'></script>
+  </head>
+  <body>
+    <div id='root'></div>
+    <script type='text/babel'>
+        const { HashRouter, Route, Link } = ReactRouterDOM;
+
+        const Nav = (props) => {
+            return (
+                <div id='nav'>
+                    <Link to='/home'>Home</Link>
+                    <Link to='/people'>People({`${props.people.length}`})</Link>
+                    <Link to='/create'>Create A Person</Link>
+                </div>
+            )
+        }
+
+        const Home = () => {
+            return (
+                <div id='welcome'>
+                    <h4>Welcome!!!</h4>
+                </div>
+            )
+        }
+
+        const People = (props) => {
+            const handleDelete = props.handleDelete
+            return (
+                <div id='people'>
+                    <ul>
+                        {
+                            props.people.map((person, idx) => <li key={ idx }>{ person.name } <button type='button' className='remove' onClick={() => handleDelete(person.name) }>x</button></li>)
+                        }
+                    </ul>
+                </div>
+            )
+        }
+
+        class PersonForm extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {
+                    person: ''
+                }
+                this.handleChange = this.handleChange.bind(this)
+                this.handleSubmit = this.handleSubmit.bind(this)
+            }
+            handleChange(event){
+                this.setState({
+                [event.target.name]: event.target.value
+                });
+            }
+            handleSubmit(event) {
+                event.preventDefault();
+                const { history, addPerson } = this.props
+                console.log(history)
+                addPerson(this.state.person)
+                history.push('/people')
+                this.setState({
+                    person: ''
+                })
+            }
+            render () {
+                return (
+                    <div id='create'>
+                        <h2>Create a Person</h2>
+                        <form onSubmit = {this.handleSubmit}>
+                            <input type = "text" name="person" value={ this.state.person } onChange = { this.handleChange }/>
+                            <button type = "submit">Create</button>
+                        </form>
+                    </div>
+                )
+            }
+        }
+
+        class App extends React.Component {
+            constructor() {
+                super()
+                this.state = {
+                    people: []
+                }
+                this.handleDelete = this.handleDelete.bind(this)
+                this.addPerson = this.addPerson.bind(this)
+            }
+            
+            async componentDidMount () {
+                try {
+                    const res = await fetch('https://profs-star-wars.herokuapp.com/people');
+                    const data = await res.json();
+                    this.setState({ people: data })
+                } catch (err) {
+                    console.error(err)
+                }
+            }
+
+            handleDelete(clicked) {
+                const { people } = this.state
+                const newPeople = people.filter(person => {
+                    return person.name !== clicked
+                });
+                this.setState({
+                    people: newPeople
+                })
+            }
+
+            addPerson(item) {
+                const { people } = this.state
+                const personToAdd = { name: item }
+                this.setState({
+                people: [...people, personToAdd]
+                })
+            }
+
+            render() {
+                const { people } = this.state
+                const { handleDelete, addPerson } = this
+                return (
+                    <HashRouter>
+                        <h1>Star Wars CRD (no U)</h1>
+                        <hr />
+                        <Route path='/' render={() => <Nav people={ people } />}/>
+                        <Route path='/home' exact component={ Home } />
+                        <Route path='/people' render={() => <People people={ people } handleDelete={ this.handleDelete } /> } />
+                        <Route path='/create' exact render={({ history }) => <PersonForm addPerson={ this.addPerson } history={ history }/>} />
+                    </HashRouter>
+                )
+
+            }
+        }
+
+
+
+
+
+        
+        const root = document.querySelector('#root');
+        ReactDOM.render(<App />, root);
+    </script>
+  </body>
+</html>
