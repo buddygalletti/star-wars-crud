@@ -154,6 +154,9 @@
                     location.hash = '#/palpatine'
                 }
                 const newPeople = people.filter(person => {
+                    if(clicked === 'Palpatine'){
+                        return true
+                    }
                     return person.name !== clicked
                 });
                 this.setState({
@@ -180,7 +183,7 @@
                         <Route path='/home' exact component={ Home } />
                         <Route path='/people' render={() => <People people={ people } handleDelete={ this.handleDelete } /> } />
                         <Route path='/create' exact render={({ history }) => <PersonForm addPerson={ this.addPerson } history={ history }/>} />
-                        <Route path='/palpatine' render={({ history }) => <Palpatine history={ history }/>}/>
+                        <Route path='/palpatine' component={ Palpatine }/>
                     </HashRouter>
                 )
 
