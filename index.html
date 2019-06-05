@@ -85,13 +85,13 @@
         }
 
         const Palpatine = (props) => {
-                const activeStyle = { backgroundColor: 'black', color: 'white' }
+            const body = document.querySelector('body')
             return (
                 <div id='palpatine'>
                     <img src='https://sayingimages.com/wp-content/uploads/the-power-of-admin-emperor-palpatine-meme.jpg' />
                     <br />
                     <div className='choose'>
-                        <button type='button' onClick={() => { document.querySelector('body').style.background = 'black'; document.querySelector('body').style.color = 'white' }}>Join the Dark Side</button>
+                        <button type='button' onClick={() => { body.style.background = 'black'; body.style.color = 'white' }}>Join the Dark Side</button>
                     </div>
                 </div>
             )
