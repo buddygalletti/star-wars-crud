@@ -114,6 +114,7 @@
             handleSubmit(event) {
                 event.preventDefault();
                 const { history, addPerson } = this.props
+                // best to remove unnecessary console.log()s after development
                 console.log(history)
                 addPerson(this.state.person)
                 history.push('/people')
